@@ -1,0 +1,402 @@
+import { useState } from 'react'
+import MainLayout from '@/components/Layout/MainLayout'
+import { Cliente } from '@/types'
+import { formatCurrency, formatPhone, formatCNPJ } from '@/utils/formatters'
+
+export default function ClientesPage() {
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [notification, setNotification] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const [clientes, setClientes] = useState<Cliente[]>([
+    {
+      id: '1',
+      nome: 'Ciranda Mágica Imp. e Dist.',
+      cnpj: '50.982.380/0001-85',
+      telefone: '44999999999',
+      email: 'contato@cirandamagica.com.br',
+      endereco: 'Rua Lobelia 1122',
+      bairro: 'Gleba Ribeirão',
+      cidade: 'Maringá',
+      estado: 'PR',
+      cep: '87000-000',
+      valor_mensalidade: 79.90,
+      dia_vencimento: '20',
+      ativo: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: '2',
+      nome: 'Transportadora Veloz Ltda',
+      cnpj: '12.345.678/0001-99',
+      telefone: '11988888888',
+      email: 'financeiro@veloz.com.br',
+      endereco: 'Av. Brasil 100',
+      bairro: 'Centro',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cep: '01000-000',
+      valor_mensalidade: 150.00,
+      dia_vencimento: '10',
+      ativo: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  ])
+
+  const [newCliente, setNewCliente] = useState<Partial<Cliente>>({
+    nome: '',
+    cnpj: '',
+    telefone: '',
+    email: '',
+    endereco: '',
+    bairro: '',
+    cidade: '',
+    estado: 'PR',
+    cep: '',
+    valor_mensalidade: 79.90,
+    dia_vencimento: '10',
+    ativo: true
+  })
+
+  const estados = [
+    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+    'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+    'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+  ]
+
+  const showNotification = (message: string) => {
+    setNotification(message)
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  const handleAddCliente = () => {
+    if (!newCliente.nome || !newCliente.cnpj || !newCliente.telefone) {
+      showNotification('Preencha todos os campos obrigatórios!')
+      return
+    }
+
+    const cliente: Cliente = {
+      id: `${Date.now()}`,
+      nome: newCliente.nome!,
+      cnpj: newCliente.cnpj!,
+      telefone: newCliente.telefone!,
+      email: newCliente.email,
+      endereco: newCliente.endereco!,
+      bairro: newCliente.bairro!,
+      cidade: newCliente.cidade!,
+      estado: newCliente.estado!,
+      cep: newCliente.cep,
+      valor_mensalidade: newCliente.valor_mensalidade!,
+      dia_vencimento: newCliente.dia_vencimento!,
+      ativo: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+
+    setClientes([...clientes, cliente])
+    setShowAddModal(false)
+    setNewCliente({
+      nome: '',
+      cnpj: '',
+      telefone: '',
+      email: '',
+      endereco: '',
+      bairro: '',
+      cidade: '',
+      estado: 'PR',
+      cep: '',
+      valor_mensalidade: 79.90,
+      dia_vencimento: '10',
+      ativo: true
+    })
+    showNotification('Cliente adicionado com sucesso!')
+  }
+
+  const toggleAtivo = (id: string) => {
+    setClientes(clientes.map(c =>
+      c.id === id ? { ...c, ativo: !c.ativo } : c
+    ))
+  }
+
+  const filteredClientes = clientes.filter(c =>
+    c.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.cnpj.includes(searchTerm) ||
+    c.telefone.includes(searchTerm)
+  )
+
+  const clientesAtivos = clientes.filter(c => c.ativo).length
+  const receitaMensal = clientes
+    .filter(c => c.ativo)
+    .reduce((acc, c) => acc + c.valor_mensalidade, 0)
+
+  return (
+    <MainLayout>
+      <div className="space-y-6">
+        {/* Notificação */}
+        {notification && (
+          <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg z-50 animate-bounce">
+            ✓ {notification}
+          </div>
+        )}
+
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-800">Gestão de Clientes</h1>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+          >
+            ➕ Novo Cliente
+          </button>
+        </div>
+
+        {/* Cards de Resumo */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">Total de Clientes</h3>
+            <p className="text-3xl font-bold text-primary-600">{clientes.length}</p>
+            <p className="text-sm text-gray-600 mt-2">cadastrados no sistema</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">Clientes Ativos</h3>
+            <p className="text-3xl font-bold text-green-600">{clientesAtivos}</p>
+            <p className="text-sm text-gray-600 mt-2">com contrato ativo</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">Receita Mensal Recorrente</h3>
+            <p className="text-3xl font-bold text-blue-600">{formatCurrency(receitaMensal)}</p>
+            <p className="text-sm text-gray-600 mt-2">de clientes ativos</p>
+          </div>
+        </div>
+
+        {/* Barra de Busca */}
+        <div className="bg-white rounded-lg shadow-md p-4">
+          <input
+            type="text"
+            placeholder="Buscar por nome, CNPJ ou telefone..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </div>
+
+        {/* Grid de Clientes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {filteredClientes.length === 0 ? (
+            <div className="col-span-2 bg-white rounded-lg shadow-md p-8 text-center text-gray-500">
+              Nenhum cliente encontrado.
+            </div>
+          ) : (
+            filteredClientes.map((cliente) => (
+              <div key={cliente.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-800">{cliente.nome}</h3>
+                    <p className="text-sm text-gray-600">CNPJ: {formatCNPJ(cliente.cnpj)}</p>
+                  </div>
+                  <button
+                    onClick={() => toggleAtivo(cliente.id)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold ${
+                      cliente.ativo
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}
+                  >
+                    {cliente.ativo ? '✓ ATIVO' : '✕ INATIVO'}
+                  </button>
+                </div>
+
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <p>📞 {formatPhone(cliente.telefone)}</p>
+                  {cliente.email && <p>✉️ {cliente.email}</p>}
+                  <p>📍 {cliente.endereco}, {cliente.bairro}</p>
+                  <p className="ml-4">{cliente.cidade} - {cliente.estado} {cliente.cep && `| CEP: ${cliente.cep}`}</p>
+                </div>
+
+                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                  <div>
+                    <p className="text-xs text-gray-500">Mensalidade</p>
+                    <p className="text-lg font-bold text-green-600">{formatCurrency(cliente.valor_mensalidade)}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Vencimento</p>
+                    <p className="text-lg font-bold text-blue-600">Dia {cliente.dia_vencimento}</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Modal de Adicionar Cliente */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6 my-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Novo Cliente</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nome / Razão Social *
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.nome}
+                  onChange={(e) => setNewCliente({ ...newCliente, nome: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  CNPJ *
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.cnpj}
+                  onChange={(e) => setNewCliente({ ...newCliente, cnpj: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="00.000.000/0000-00"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Telefone *
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.telefone}
+                  onChange={(e) => setNewCliente({ ...newCliente, telefone: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="44999999999"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={newCliente.email}
+                  onChange={(e) => setNewCliente({ ...newCliente, email: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Endereço *
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.endereco}
+                  onChange={(e) => setNewCliente({ ...newCliente, endereco: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Bairro *
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.bairro}
+                  onChange={(e) => setNewCliente({ ...newCliente, bairro: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  CEP
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.cep}
+                  onChange={(e) => setNewCliente({ ...newCliente, cep: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="00000-000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Cidade *
+                </label>
+                <input
+                  type="text"
+                  value={newCliente.cidade}
+                  onChange={(e) => setNewCliente({ ...newCliente, cidade: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Estado *
+                </label>
+                <select
+                  value={newCliente.estado}
+                  onChange={(e) => setNewCliente({ ...newCliente, estado: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  {estados.map(uf => (
+                    <option key={uf} value={uf}>{uf}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Valor Mensalidade *
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={newCliente.valor_mensalidade}
+                  onChange={(e) => setNewCliente({ ...newCliente, valor_mensalidade: parseFloat(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Dia Vencimento *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="31"
+                  value={newCliente.dia_vencimento}
+                  onChange={(e) => setNewCliente({ ...newCliente, dia_vencimento: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleAddCliente}
+                className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                Adicionar Cliente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </MainLayout>
+  )
+}

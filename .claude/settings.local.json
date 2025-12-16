@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(tree:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(powershell -Command \"cd ''C:\\Users\\laercio.junior\\OneDrive - gazin.com.br\\Documentos\\Desenvolvimento\\lince-track-erp'' ; Remove-Item -Path ''.next'' -Recurse -Force\")",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nSistema completo Lince Track ERP v1.0\n\nImplementações incluídas:\n- Sistema completo de gestão de clientes com veículos\n- Gestão de faturas com geração automática, edição e impressão\n- Gestão de despesas com 11 categorias e edição completa\n- Sistema de relatórios (Faturas, Despesas, Clientes, Financeiro)\n- Dashboard com métricas em tempo real\n- Logo da empresa integrada nas faturas\n- Persistência em localStorage (preparado para Supabase)\n- Schema do banco de dados validado e documentado\n- Todos os dados mockados removidos\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(dir:*)",
+      "Bash(npm install:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

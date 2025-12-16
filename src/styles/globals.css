@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Estilos para impressão de relatórios */
+@media print {
+  /* Resetar background para branco */
+  body {
+    background: white !important;
+  }
+
+  /* Ocultar sidebar, header e elementos de navegação */
+  aside,
+  nav,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Ajustar margens da página */
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+
+  /* Container principal ocupar toda largura */
+  main {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Evitar quebra de página dentro de elementos importantes */
+  .print-no-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Tabelas */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 10pt !important;
+  }
+
+  table thead {
+    display: table-header-group;
+  }
+
+  table tbody tr {
+    page-break-inside: avoid;
+  }
+
+  /* Cards de resumo */
+  .print-summary-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Títulos */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  /* Remover sombras e bordas arredondadas na impressão */
+  * {
+    box-shadow: none !important;
+  }
+
+  /* Garantir que cores de fundo sejam impressas */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Ajustar tamanho de fonte para impressão */
+  body {
+    font-size: 11pt !important;
+  }
+
+  /* Garantir que tabelas não quebrem */
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+}
