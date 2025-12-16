@@ -35,7 +35,7 @@ export default function LoginForm() {
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <div className="w-64 h-40">
+          <div className="w-80 h-48">
             <img
               src="/logo-tecrastr-new.png"
               alt="Tec Rastreadores Logo"

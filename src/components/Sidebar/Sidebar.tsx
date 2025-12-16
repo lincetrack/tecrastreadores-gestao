@@ -52,15 +52,15 @@ export default function Sidebar() {
         w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div className="p-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="p-6 flex flex-col items-center justify-center">
+          <div className="w-full mb-2">
             <img
               src="/logo-tecrastr-new.png"
               alt="Tec Rastreadores Logo"
-              className="w-10 h-10 object-contain"
+              className="w-full h-auto object-contain"
             />
-            <h1 className="text-xl font-bold text-primary-600">Tec Rastreadores</h1>
           </div>
+          <h1 className="text-lg font-bold text-primary-600 text-center">Sistema de Gestão</h1>
         </div>
         <nav className="mt-6">
           {menuItems.map((item) => (
