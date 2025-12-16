@@ -53,7 +53,7 @@ export default function AniversariantesPage() {
     .sort((a, b) => a.dia_nascimento - b.dia_nascimento)
 
   const handleSendWhatsapp = (cliente: Aniversariante) => {
-    const message = `Olá ${cliente.nome}! 🎉🎂\n\nA equipe da Tec Rastr deseja um Feliz Aniversário! 🎈\n\nQue este novo ciclo seja repleto de saúde, paz e realizações!\n\nObrigado por confiar em nossos serviços!\n\nAbraços,\nEquipe Tec Rastr`
+    const message = `Olá ${cliente.nome}! 🎉🎂\n\nA equipe da Tec Rastreadores deseja um Feliz Aniversário! 🎈\n\nQue este novo ciclo seja repleto de saúde, paz e realizações!\n\nObrigado por confiar em nossos serviços!\n\nAbraços,\nEquipe Tec Rastreadores`
     const link = `https://wa.me/55${cliente.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
     window.open(link, '_blank')
   }

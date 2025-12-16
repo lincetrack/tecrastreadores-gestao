@@ -38,7 +38,7 @@ export default function LoginForm() {
           <div className="w-64 h-40">
             <img
               src="/logo-tecrastr-new.png"
-              alt="Tecrastr Logo"
+              alt="Tec Rastreadores Logo"
               className="w-full h-full object-contain"
             />
           </div>

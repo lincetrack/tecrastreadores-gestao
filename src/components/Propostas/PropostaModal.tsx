@@ -103,16 +103,16 @@ export default function PropostaModal({ proposta, onClose }: PropostaModalProps)
           {/* Cabeçalho com Logo */}
           <div className="flex justify-between items-start mb-4 border-b-2 border-primary-600 pb-3">
             <div className="flex items-center gap-3">
-              <div className="w-20 h-14 flex items-center justify-center">
+              <div className="w-28 h-20 flex items-center justify-center">
                 <img
                   src="/logo-tecrastr-new.png"
-                  alt="Tecrastr Logo"
+                  alt="Tec Rastreadores Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
               <div>
-                <h1 className="font-bold text-base text-gray-900">TEC RASTR</h1>
-                <p className="text-xs text-gray-500 tracking-wider">RASTREADORES</p>
+                <h1 className="font-bold text-base text-gray-900">TEC RASTREADORES</h1>
+                <p className="text-xs text-gray-500 tracking-wider">RASTREAMENTO VEICULAR</p>
                 <p className="text-xs text-gray-500">CNPJ: 41.054.830/0001-89</p>
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function PropostaModal({ proposta, onClose }: PropostaModalProps)
           {/* Rodapé - COMPACTO */}
           <div className="mt-3 pt-2 border-t border-gray-300">
             <div className="text-center text-xs text-gray-600">
-              <p className="font-bold text-gray-800 mb-0.5">TEC RASTR RASTREADORES</p>
+              <p className="font-bold text-gray-800 mb-0.5">TEC RASTREADORES</p>
               <p>CNPJ: 41.054.830/0001-89 | Email: comercial@tecrastreadores.com.br | Tel: (47) 99123-4391</p>
               <p>Rua 240 nº 400, Sala 02 | CEP: 88220-000</p>
             </div>

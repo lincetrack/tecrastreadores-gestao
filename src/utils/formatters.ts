@@ -34,7 +34,7 @@ export const generateWhatsappLink = (phone: string, customerName: string, dueDat
 
   const message = `Olá, ${customerName}! Tudo bem? 😊
 
-Passando para lembrar, que a mensalidade do serviço de rastreamento veicular da Tec Rastr referente ao período [${period}] está disponível para pagamento.
+Passando para lembrar, que a mensalidade do serviço de rastreamento veicular da Tec Rastreadores referente ao período [${period}] está disponível para pagamento.
 
 *Valor: ${valorFormatado}*
 
@@ -50,7 +50,7 @@ Se precisar de qualquer ajuda ou tiver alguma dúvida, estamos à disposição!
 
 Agradecemos pela parceria e confiança em nossos serviços.
 Atenciosamente,
-*Equipe Tec Rastr*`;
+*Equipe Tec Rastreadores*`;
 
   const cleanPhone = phone.replace(/\D/g, '');
   return `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(message)}`;

@@ -53,16 +53,16 @@ export default function InvoiceModal({ invoice, customer, onClose }: InvoiceModa
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 border-b-2 border-gray-800 pb-4 mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-28 h-20 flex items-center justify-center">
+            <div className="w-40 h-28 flex items-center justify-center">
               <img
                 src="/logo-tecrastr-new.png"
-                alt="Tecrastr Logo"
+                alt="Tec Rastreadores Logo"
                 className="w-full h-full object-contain"
               />
             </div>
             <div>
-              <h1 className="font-bold text-xl text-gray-900">TEC RASTR</h1>
-              <p className="text-xs text-gray-500 tracking-widest">RASTREADORES</p>
+              <h1 className="font-bold text-xl text-gray-900">TEC RASTREADORES</h1>
+              <p className="text-xs text-gray-500 tracking-widest">RASTREAMENTO VEICULAR</p>
             </div>
           </div>
           <div className="text-right">
@@ -77,7 +77,7 @@ export default function InvoiceModal({ invoice, customer, onClose }: InvoiceModa
 
         {/* EMISSOR */}
         <div className="mb-6 text-xs">
-          <p className="font-bold">TEC RASTR RASTREADORES</p>
+          <p className="font-bold">TEC RASTREADORES</p>
           <p>Rua 240 nº 400, Sala 02</p>
           <p>CEP: 88220-000 | CONTATO: (47) 99123-4391 | e-mail: comercial@tecrastreadores.com.br</p>
           <p className="mt-1"><strong>CNPJ: 41.054.830/0001-89</strong> | Inscrição Estadual: ISENTO</p>
@@ -108,8 +108,7 @@ export default function InvoiceModal({ invoice, customer, onClose }: InvoiceModa
         {/* DADOS BANCÁRIOS */}
         <div className="mb-6 bg-gray-100 p-3 rounded">
           <p className="font-bold">Dados Bancários:</p>
-          <p className="text-lg">PIX CNPJ: 63.061.943/0001-44</p>
-          <p>Banco Nubank</p>
+          <p className="text-lg font-bold">PIX CELULAR: (47) 99123-4391</p>
           <p className="text-xs text-gray-500 mt-1">Ou Boleto.</p>
         </div>
 

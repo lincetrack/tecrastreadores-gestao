@@ -56,10 +56,10 @@ export default function Sidebar() {
           <div className="flex items-center gap-3">
             <img
               src="/logo-tecrastr-new.png"
-              alt="Tecrastr Logo"
+              alt="Tec Rastreadores Logo"
               className="w-10 h-10 object-contain"
             />
-            <h1 className="text-xl font-bold text-primary-600">Tecrastr</h1>
+            <h1 className="text-xl font-bold text-primary-600">Tec Rastreadores</h1>
           </div>
         </div>
         <nav className="mt-6">
