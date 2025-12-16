@@ -154,7 +154,7 @@ export default function InvoiceModal({ invoice, customer, onClose }: InvoiceModa
         <div className="text-[10px] text-gray-500 text-center border-t border-gray-300 pt-4 mt-auto">
           <p>Operação não sujeita a emissão de nota fiscal de serviço - Vetada a cobrança de ISSQN conforme lei complementar 116/2003</p>
           <p>Documento emitido por ME ou EPP Optante pelo Simples Nacional</p>
-          <p className="mt-2 font-bold">{customer.cidade} - {customer.estado}, {new Date().toLocaleDateString('pt-BR')}</p>
+          <p className="mt-2 font-bold">ITAJAÍ - SC, {new Date().toLocaleDateString('pt-BR')}</p>
         </div>
 
         <div className="sticky bottom-0 bg-white border-t border-gray-300 p-3 sm:p-4 print:hidden mt-6">
