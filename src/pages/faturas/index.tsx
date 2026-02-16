@@ -30,15 +30,29 @@ export default function FaturasPage() {
 
   const loadData = async () => {
     try {
+      console.log('\n📥 [DEBUG] Carregando dados do Supabase...')
       setLoading(true)
+
       const [clientesData, faturasData] = await Promise.all([
         clienteService.getAll(),
         faturaService.getAll()
       ])
+
+      console.log(`✅ [DEBUG] Clientes carregados: ${clientesData.length}`)
+      console.log(`✅ [DEBUG] Faturas carregadas: ${faturasData.length}`)
+      console.log(`\n👥 [DEBUG] Clientes ativos:`, clientesData.filter(c => c.ativo).map(c => ({
+        id: c.id,
+        nome: c.nome,
+        ativo: c.ativo,
+        dia_vencimento: c.dia_vencimento,
+        valor_mensalidade: c.valor_mensalidade
+      })))
+
       setClientes(clientesData)
       setFaturas(faturasData)
     } catch (error) {
-      console.error('Erro ao carregar dados:', error)
+      console.error('❌ [DEBUG] Erro ao carregar dados:', error)
+      console.error('❌ [DEBUG] Detalhes:', JSON.stringify(error, null, 2))
       showNotification('Erro ao carregar dados')
     } finally {
       setLoading(false)
@@ -52,19 +66,56 @@ export default function FaturasPage() {
 
   const generateInvoices = async () => {
     try {
+      console.log('🚀 [DEBUG] Iniciando geração de faturas...')
       const [year, month] = selectedMonth.split('-')
+      console.log(`📅 [DEBUG] Período selecionado: ${year}-${month}`)
+      console.log(`👥 [DEBUG] Total de clientes cadastrados: ${clientes.length}`)
+
       let count = 0
       const newInvoices: Omit<Fatura, 'id' | 'numero_fatura' | 'created_at' | 'updated_at'>[] = []
 
+      // Função auxiliar para obter o último dia do mês
+      const getLastDayOfMonth = (year: number, month: number): number => {
+        // Cria uma data no primeiro dia do mês seguinte e subtrai 1 dia
+        return new Date(year, month, 0).getDate()
+      }
+
       for (const cliente of clientes) {
-        if (!cliente.ativo) continue
+        console.log(`\n🔍 [DEBUG] Processando cliente: ${cliente.nome} (ID: ${cliente.id})`)
+        console.log(`   ↳ Ativo: ${cliente.ativo}`)
 
-        const dueDate = `${year}-${month}-${cliente.dia_vencimento.padStart(2, '0')}`
+        if (!cliente.ativo) {
+          console.log(`   ⚠️ [DEBUG] Cliente inativo - pulando...`)
+          continue
+        }
 
+        console.log(`   ↳ Dia vencimento: ${cliente.dia_vencimento}`)
+        console.log(`   ↳ Valor mensalidade: R$ ${cliente.valor_mensalidade}`)
+        console.log(`   ↳ Quantidade veículos: ${cliente.veiculos?.length || 1}`)
+
+        // Validar e ajustar o dia de vencimento para o mês selecionado
+        const yearNum = parseInt(year)
+        const monthNum = parseInt(month)
+        const lastDayOfMonth = getLastDayOfMonth(yearNum, monthNum)
+        const diaVencimento = parseInt(cliente.dia_vencimento)
+
+        // Se o dia de vencimento for maior que o último dia do mês, usar o último dia
+        const diaAjustado = Math.min(diaVencimento, lastDayOfMonth)
+
+        console.log(`   ↳ Último dia do mês ${month}/${year}: ${lastDayOfMonth}`)
+        if (diaVencimento > lastDayOfMonth) {
+          console.log(`   ⚠️ [DEBUG] Dia ${diaVencimento} não existe em ${month}/${year}. Ajustando para ${diaAjustado}`)
+        }
+
+        const dueDate = `${year}-${month}-${diaAjustado.toString().padStart(2, '0')}`
+        console.log(`   ↳ Data vencimento calculada: ${dueDate}`)
+
+        console.log(`   🔎 [DEBUG] Verificando se fatura já existe...`)
         const exists = await faturaService.checkExists(cliente.id, dueDate)
+        console.log(`   ↳ Fatura já existe? ${exists ? 'SIM ✅' : 'NÃO ❌'}`)
 
         if (!exists) {
-          newInvoices.push({
+          const novaFatura = {
             cliente_id: cliente.id,
             cliente_nome: cliente.nome,
             descricao: 'Loc. Equipamento e Software para Rastreamento Veicular',
@@ -74,20 +125,35 @@ export default function FaturasPage() {
             data_emissao: new Date().toISOString().split('T')[0],
             status: 'pendente',
             enviado_whatsapp: false
-          })
+          }
+          console.log(`   ✅ [DEBUG] Fatura adicionada para criação:`, novaFatura)
+          newInvoices.push(novaFatura)
           count++
         }
       }
 
+      console.log(`\n📊 [DEBUG] Resumo da geração:`)
+      console.log(`   ↳ Total de faturas a serem criadas: ${count}`)
+      console.log(`   ↳ Faturas preparadas:`, newInvoices)
+
       if (count > 0) {
+        console.log(`\n💾 [DEBUG] Salvando ${count} fatura(s) no banco de dados...`)
         await faturaService.createMany(newInvoices)
+        console.log(`✅ [DEBUG] Faturas salvas com sucesso!`)
+
+        console.log(`🔄 [DEBUG] Recarregando dados...`)
         await loadData()
+        console.log(`✅ [DEBUG] Dados recarregados!`)
+
         showNotification(`${count} fatura(s) gerada(s) com sucesso!`)
       } else {
+        console.log(`ℹ️ [DEBUG] Nenhuma fatura nova para criar.`)
         showNotification('Todas as faturas deste mês já foram geradas.')
       }
     } catch (error) {
-      console.error('Erro ao gerar faturas:', error)
+      console.error('❌ [DEBUG] Erro ao gerar faturas:', error)
+      console.error('❌ [DEBUG] Stack trace:', (error as Error).stack)
+      console.error('❌ [DEBUG] Detalhes do erro:', JSON.stringify(error, null, 2))
       showNotification('Erro ao gerar faturas')
     }
   }

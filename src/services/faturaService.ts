@@ -71,15 +71,24 @@ export const faturaService = {
 
   // Criar múltiplas faturas
   async createMany(faturas: Omit<Fatura, 'id' | 'numero_fatura' | 'created_at' | 'updated_at'>[]): Promise<Fatura[]> {
+    console.log(`\n🔵 [SERVICE] createMany - Iniciando criação de ${faturas.length} faturas`)
+    console.log(`🔵 [SERVICE] Faturas a serem inseridas:`, JSON.stringify(faturas, null, 2))
+
     const { data, error } = await supabase
       .from('faturas')
       .insert(faturas)
       .select()
 
     if (error) {
-      console.error('Erro ao criar faturas:', error)
+      console.error('🔴 [SERVICE] Erro ao criar faturas:', error)
+      console.error('🔴 [SERVICE] Código do erro:', error.code)
+      console.error('🔴 [SERVICE] Mensagem do erro:', error.message)
+      console.error('🔴 [SERVICE] Detalhes completos:', JSON.stringify(error, null, 2))
       throw error
     }
+
+    console.log(`🟢 [SERVICE] Faturas criadas com sucesso:`, data)
+    console.log(`🟢 [SERVICE] Total de faturas retornadas: ${data?.length || 0}`)
 
     return data || []
   },
@@ -164,6 +173,10 @@ export const faturaService = {
 
   // Verificar se fatura já existe
   async checkExists(clienteId: string, dataVencimento: string): Promise<boolean> {
+    console.log(`\n🔵 [SERVICE] checkExists - Verificando fatura`)
+    console.log(`   ↳ Cliente ID: ${clienteId}`)
+    console.log(`   ↳ Data Vencimento: ${dataVencimento}`)
+
     const { data, error } = await supabase
       .from('faturas')
       .select('id')
@@ -172,10 +185,17 @@ export const faturaService = {
       .single()
 
     if (error && error.code !== 'PGRST116') { // PGRST116 = not found
-      console.error('Erro ao verificar fatura:', error)
+      console.error('🔴 [SERVICE] Erro ao verificar fatura:', error)
+      console.error('🔴 [SERVICE] Código do erro:', error.code)
       throw error
     }
 
-    return !!data
+    const exists = !!data
+    console.log(`   ↳ Resultado: ${exists ? 'Fatura EXISTE' : 'Fatura NÃO EXISTE'}`)
+    if (data) {
+      console.log(`   ↳ ID da fatura encontrada: ${data.id}`)
+    }
+
+    return exists
   }
 }
