@@ -5,7 +5,15 @@ import { formatCurrency, formatDate } from '@/utils/formatters'
 import { despesaService } from '@/services/despesaService'
 
 export default function DespesasPage() {
-  const [selectedMonth, setSelectedMonth] = useState('2025-12')
+  // Obter mês corrente automaticamente (formato: YYYY-MM)
+  const getCurrentMonth = () => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    return `${year}-${month}`
+  }
+
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth())
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editingDespesa, setEditingDespesa] = useState<Despesa | null>(null)
