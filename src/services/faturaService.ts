@@ -35,8 +35,9 @@ export const faturaService = {
 
   // Buscar faturas por mês
   async getByMonth(year: number, month: number): Promise<Fatura[]> {
+    const lastDayOfMonth = new Date(year, month, 0).getDate()
     const startDate = `${year}-${month.toString().padStart(2, '0')}-01`
-    const endDate = `${year}-${month.toString().padStart(2, '0')}-31`
+    const endDate = `${year}-${month.toString().padStart(2, '0')}-${lastDayOfMonth.toString().padStart(2, '0')}`
 
     const { data, error } = await supabase
       .from('faturas')
