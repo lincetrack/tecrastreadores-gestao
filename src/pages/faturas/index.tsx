@@ -131,7 +131,7 @@ export default function FaturasPage() {
             quantidade_veiculos: cliente.veiculos?.length || 1,
             data_vencimento: dueDate,
             data_emissao: new Date().toISOString().split('T')[0],
-            status: 'pendente',
+            status: 'pendente' as const,
             enviado_whatsapp: false
           }
           console.log(`   ✅ [DEBUG] Fatura adicionada para criação:`, novaFatura)
